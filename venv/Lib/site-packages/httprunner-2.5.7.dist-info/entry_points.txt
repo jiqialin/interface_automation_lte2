@@ -1,0 +1,6 @@
+[console_scripts]
+ate=httprunner.cli:main
+hrun=httprunner.cli:main
+httprunner=httprunner.cli:main
+locusts=httprunner.ext.locusts.cli:main
+
