@@ -1,5 +1,17 @@
 __version__ = "1.0.0"
-__description__ = "One-stop solution for HTTP(S) testing. Integrated Httprunner2"
+__description__ = """
+██╗  ██╗████████╗████████╗██████╗ ██████╗ ██╗   ██╗███╗   ██╗███╗   ██╗███████╗██████╗   
+██║  ██║╚══██╔══╝╚══██╔══╝██╔══██╗██╔══██╗██║   ██║████╗  ██║████╗  ██║██╔════╝██╔══██╗
+███████║   ██║      ██║   ██████╔╝██████╔╝██║   ██║██╔██╗ ██║██╔██╗ ██║█████╗  ██████╔╝
+██╔══██║   ██║      ██║   ██╔═══╝ ██╔══██╗██║   ██║██║╚██╗██║██║╚██╗██║██╔══╝  ██╔══██╗
+██║  ██║   ██║      ██║   ██║     ██║  ██║╚██████╔╝██║ ╚████║██║ ╚████║███████╗██║  ██║
+╚═╝  ╚═╝   ╚═╝      ╚═╝   ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝
+
+HttpRunner2 is an open source API testing tool that is developed on a business-based basis to help teams build 
+interface automation systems.   Solve the repetitive work in regression test stage and improve the test efficiency.   
+Improve teamwork ability. ✨ � ✨ 
+
+"""
 __title__ = 'ef_lte2'
 __url__ = ''
 __author__ = 'Angst'

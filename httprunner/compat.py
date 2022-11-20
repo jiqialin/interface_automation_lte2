@@ -4,8 +4,7 @@
 httprunner.compat
 ~~~~~~~~~~~~~~~~~
 
-This module handles import compatibility issues between Python 2 and
-Python 3.
+This module handles import compatibility issues between Python 2 and Python 3.
 """
 
 try:
@@ -39,15 +38,16 @@ except AttributeError:
     JSONDecodeError = ValueError
 
 if is_py2:
-    builtin_str = str
-    bytes = str
-    str = unicode
-    basestring = basestring
-    numeric_types = (int, long, float)
-    integer_types = (int, long)
-
-    FileNotFoundError = IOError
-    import StringIO as io
+    # builtin_str = str
+    # bytes = str
+    # str = unicode
+    # basestring = basestring
+    # numeric_types = (int, long, float)
+    # integer_types = (int, long)
+    #
+    # FileNotFoundError = IOError
+    # import StringIO as io
+    pass
 
 elif is_py3:
     builtin_str = str

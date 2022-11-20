@@ -22,6 +22,7 @@ def main():
     if is_py2:
         color_print(get_python2_retire_msg(), "YELLOW")
 
+    print("One-stop solution for HTTP(S) testing.111")
     parser = argparse.ArgumentParser(description=__description__)
     parser.add_argument(
         '-V', '--version', dest='version', action='store_true',

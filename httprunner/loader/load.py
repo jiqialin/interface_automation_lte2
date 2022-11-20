@@ -9,6 +9,7 @@ import yaml
 from httprunner import builtin
 from httprunner import exceptions, logger, utils
 from httprunner.loader.locate import get_project_working_directory
+from httprunner.loader.check import check_format
 
 try:
     # PyYAML version >= 5.1
@@ -41,7 +42,7 @@ def _load_json_file(json_file):
             err_msg = u"JSONDecodeError: JSON file format error: {}".format(json_file)
             logger.log_error(err_msg)
             raise exceptions.FileFormatError(err_msg)
-
+        check_format(json_file, json_content)
         return json_content
 
 

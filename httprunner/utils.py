@@ -6,6 +6,7 @@ import io
 import itertools
 import json
 import os.path
+import platform
 import re
 import uuid
 from datetime import datetime
@@ -13,8 +14,9 @@ from datetime import datetime
 import sentry_sdk
 
 from httprunner import exceptions, logger, __version__
-from httprunner.compat import basestring, bytes, is_py2
+from httprunner.compat import basestring, bytes
 from httprunner.exceptions import ParamsError
+from httprunner.loader.load import _load_json_file
 
 absolute_http_url_regexp = re.compile(r"^https?://", re.I)
 
@@ -99,13 +101,13 @@ def query_json(json_content, query, delimiter='.'):
         }
         >>>
         >>> query_json(json_content, "person.name.first_name")
-        >>> Leo
+        >>> 'Leo'
         >>>
         >>> query_json(json_content, "person.name.first_name.0")
-        >>> L
+        >>> 'L'
         >>>
         >>> query_json(json_content, "person.cities.0")
-        >>> Guangzhou
+        >>> 'Guangzhou'
 
     """
     raise_flag = False
@@ -355,12 +357,6 @@ def print_info(info_mapping):
         elif value is None:
             value = "None"
 
-        if is_py2:
-            if isinstance(key, unicode):
-                key = key.encode("utf-8")
-            if isinstance(value, unicode):
-                value = value.encode("utf-8")
-
         content += content_format.format(key, value)
 
     content += "-" * 48 + "\n"
@@ -496,7 +492,7 @@ def gen_cartesian_product(*args):
         >>> args = [arg1, arg2]
         >>> gen_cartesian_product(*args)
         >>> # same as below
-        >>> gen_cartesian_product(arg1, arg2)
+        # >>> gen_cartesian_product(arg1, arg2)
             [
                 {'a': 1, 'x': 111, 'y': 112},
                 {'a': 1, 'x': 121, 'y': 122},
@@ -583,26 +579,14 @@ def dump_json_file(json_data, json_file_abs_path):
 
     try:
         with io.open(json_file_abs_path, 'w', encoding='utf-8') as outfile:
-            if is_py2:
-                outfile.write(
-                    unicode(json.dumps(
-                        json_data,
-                        indent=4,
-                        separators=(',', ':'),
-                        encoding="utf8",
-                        ensure_ascii=False,
-                        cls=PythonObjectEncoder
-                    ))
-                )
-            else:
-                json.dump(
-                    json_data,
-                    outfile,
-                    indent=4,
-                    separators=(',', ':'),
-                    ensure_ascii=False,
-                    cls=PythonObjectEncoder
-                )
+            json.dump(
+                json_data,
+                outfile,
+                indent=4,
+                separators=(',', ':'),
+                ensure_ascii=False,
+                cls=PythonObjectEncoder
+            )
 
         msg = "dump file: {}".format(json_file_abs_path)
         logger.color_print(msg, "BLUE")
@@ -666,3 +650,47 @@ def get_python2_retire_msg():
         retire_msg = "Python 2 has been retired, you should move to Python 3."
 
     return retire_msg
+
+
+def get_environ_params(key=None):
+    """
+        Get the corresponding data file according to the environment information
+    :param key: default
+    :return:
+    """
+
+    if platform.system() == 'Windows' or key is None:
+        return _load_json_file(os.path.join(os.getcwd(), "data/default.json"))
+
+    return _load_json_file(os.path.join(os.getcwd(), f"data/{get_os_environ(key)}.json"))
+
+
+def get_variables_params(obj, variable):
+    """
+        Gets variable information based on the specified object
+    :param variable: variables name
+    :param obj: test case name
+    :return:
+    """
+    return analytical_object(get_environ_params(), obj)[variable]
+
+
+def analytical_object(result, obj):
+    """
+        Iterate over the nested object to get the desired value.
+    :param result:
+    :param obj:
+    :return:
+    """
+
+    for keys, values in result.items():
+        if keys == obj:
+            return values
+
+        elif isinstance(values, dict):
+            return analytical_object(values, obj)
+
+        elif isinstance(values, list):
+            for i in values:
+                if isinstance(i, dict):
+                    return analytical_object(i, obj)

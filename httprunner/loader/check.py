@@ -212,3 +212,20 @@ def is_test_content(data_structure):
 
     else:
         return False
+
+
+def check_format(file_path, content):
+    """
+        check test case format if valid
+    :param file_path:
+    :param content:
+    :return:
+    """
+    if not content:
+        err_msg = f"Test case file content is empty: {file_path}"
+        logger.color_print(err_msg, "RED")
+        raise exceptions.FileFormatError(err_msg)
+    elif not isinstance(content, (list, dict)):
+        err_msg = f"Test case file content format invalid: {file_path}"
+        logger.color_print(err_msg, "RED")
+        raise exceptions.FileFormatError(err_msg)
